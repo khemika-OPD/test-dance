@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takhli DanceFit - แดนซ์สลายความดัน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0fdf4; /* สีเขียวอ่อนผ่อนคลาย */
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #16a34a;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        /* สไตล์หน้าจอคัดกรอง */
+        .warning-box {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-title {
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+        /* ปุ่มกดขนาดใหญ่สำหรับผู้สูงอายุ */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 22px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-success {
+            background-color: #16a34a;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        /* สไตล์หน้าจอห้องเต้น */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* อัตราส่วน 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .timer-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: #dc2626;
+            margin: 15px 0;
+            background-color: #f8fafc;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        /* ซ่อนหน้าจอชั่วคราว */
+        .hidden {
+            display: none !important;
+        }
+
+        /* หน้าจอฉลองความสำเร็จ */
+        .success-box {
+            background-color: #fef9c3;
+            border: 2px solid #facc15;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="screen-screening">
+            <h1>🩺 ตรวจเช็คสุขภาพก่อนเต้น</h1>
+            <p>เพื่อความปลอดภัยของคุณตาคุณยาย วันนี้มีอาการเหล่านี้ไหมคะ?</p>
+            
+            <div class="warning-box">
+                <span class="warning-title">⚠️ หากมีอาการห้ามเต้นเด็ดขาด:</span>
+                <p style="text-align: left; margin: 10px 0 0 10px; font-size: 18px;">
+                    1. มีอาการหน้ามืด เวียนศีรษะ โคลงเคลง<br>
+                    2. รู้สึกใจสั่น เจ็บแน่นหน้าอก<br>
+                    3. วันนี้ความดันโลหิตสูงผิดปกติ
+                </p>
+            </div>
+            
+            <button class="btn btn-success" onclick="passScreening()">✅ ไม่มีอาการ (เริ่มเต้นเลย)</button>
+            <button class="btn btn-danger" onclick="failScreening()">❌ มีอาการ (งดเต้นวันนี้)</button>
+        </div>
+
+        <div id="screen-exercise" class="hidden">
+            <h1>💃 เลเวล 1: มวยจีนสลายความดัน</h1>
+            <p>กดปุ่มเริ่มเต้นด้านล่าง แล้วทำท่าตามคลิปช้าๆ นะคะ</p>
+            
+            <div class="video-container">
+                <iframe id="workout-video" src="https://www.youtube.com/embed/-VFrVWNMs8M?enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <div class="timer-text" id="timer-display">03:00</div>
+            
+            <button class="btn btn-success" id="btn-start-timer" onclick="startWorkout()">▶️ กดตรงนี้เพื่อเริ่มนับเวลา</button>
+            
+            <div id="success-message" class="success-box hidden">
+                <h2 style="color: #ca8a04; margin: 0;">🎉 ยินดีด้วยค่ะคุณตาคุณยาย!</h2>
+                <p style="font-size: 18px; margin: 10px 0 0 0;">เต้นครบ 3 นาทีเรียบร้อย หัวใจแข็งแรงขึ้น ปั๊มแสตมป์สุขภาพดีให้วันนี้แล้วค่ะ! 💮</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 180; // เวลา 3 นาที (180 วินาที)
+        let timerInterval = null;
+
+        // ฟังก์ชันเมื่อผ่านการคัดกรอง
+        function passScreening() {
+            document.getElementById('screen-screening').classList.add('hidden');
+            document.getElementById('screen-exercise').classList.remove('hidden');
+        }
+
+        // ฟังก์ชันเมื่อมีอาการเสี่ยง
+        function failScreening() {
+            alert("🏥 ด้วยความห่วงใยจาก OPD โรงพยาบาลตาคลี: วันนี้คุณตาคุณยายพักผ่อนก่อนนะจ๊ะ นั่งพักนิ่งๆ หากอาการไม่ดีขึ้นสามารถโทรติดต่อห้องตรวจพยาบาลได้ทันทีค่ะ");
+        }
+
+        // ฟังก์ชันเริ่มต้นนับเวลาเต้น
+        function startWorkout() {
+            // ซ่อนปุ่มเริ่มเต้นป้องกันการกดซ้ำ
+            document.getElementById('btn-start-timer').classList.add('hidden');
+            
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                
+                // คำนวณนาทีและวินาทีเพื่อแสดงผล
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                
+                // ใส่เลข 0 ข้างหน้าหากหลักหน่วยเหลือตัวเดียว
+                if (minutes < 10) minutes = "0" + minutes;
+                if (seconds < 10) seconds = "0" + seconds;
+                
+                document.getElementById('timer-display').innerText = minutes + ":" + seconds;
+                
+                // เมื่อเวลานับถอยหลังจนหมด (เต้นครบ 3 นาที)
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer-display').innerText = "00:00";
+                    document.getElementById('timer-display').style.color = "#16a34a"; // เปลี่ยนสีเป็นเขียว
+                    document.getElementById('success-message').classList.remove('hidden'); // แสดงข้อความพลุฉลอง
+                    
+                    // บันทึกสถานะว่าเต้นเสร็จวันนี้เข้า LocalStorage (เผื่อดึงข้อมูลไปทำสมุดแสตมป์)
+                    localStorage.setItem('dance_completed_today', 'true');
+                }
+            }, 1000); // ทำงานทุกๆ 1 วินาที
+        }
+    </script>
+
+</body>
+</html># test-dance
+เต้นสำหรับผู้ป่วยความดัน
